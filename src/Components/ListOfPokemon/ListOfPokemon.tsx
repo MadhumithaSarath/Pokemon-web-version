@@ -10,6 +10,10 @@ interface Pokemon {
   url: string;
 }
 
+interface PokemonDetails {
+  types: { type: { name: string } }[];
+}
+
 interface ApiResponse {
   results: Pokemon[];
   count: number;
@@ -46,6 +50,19 @@ const PokemonId = styled(Typography)({
   marginBottom: '8px',
 });
 
+// New style for the image container with dynamic color
+const ImageContainer = styled(Box)<{ bgColor: string }>(({ bgColor }) => ({
+  width: '120px',
+  height: '120px',
+  borderRadius: '50%',
+  backgroundColor: bgColor,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  marginBottom: '8px',
+  overflow: 'hidden',
+}));
+
 const PaginationContainer = styled(Box)({
   display: 'flex',
   justifyContent: 'center',
@@ -67,7 +84,7 @@ const BackgroundContainer = styled(Box)({
     left: 0,
     width: '100%',
     height: '100%',
-    background: 'rgba(255, 255, 255, 0.5)', // Adjust the opacity here
+    background: 'rgba(255, 255, 255, 0.5)',
     zIndex: -1,
   },
 });
@@ -82,6 +99,28 @@ const PaginationButton = styled(Button)(({ theme }) => ({
   },
 }));
 
+// Define a mapping of Pokémon types to colors
+const typeColors: Record<string, string> = {
+  fire: '#f5a367',
+  water: '#86a2e5',
+  grass: '#b6d9a5',
+  electric: '#F8D030',
+  ice: '#98D8D8',
+  fighting: '#C03028',
+  poison: '#A040A0',
+  ground: '#E0C068',
+  flying: '#A890F0',
+  psychic: '#F85888',
+  bug: '#d6df8b',
+  rock: '#B8A038',
+  ghost: '#705898',
+  dragon: '#7038F8',
+  dark: '#705848',
+  steel: '#B8B8D0',
+  fairy: '#F0B6BC',
+  normal: '#dbdbc9',
+};
+
 const PokemonList: React.FC = () => {
   const [data, setData] = useState<Pokemon[]>([]);
   const [filteredData, setFilteredData] = useState<Pokemon[]>([]);
@@ -90,16 +129,31 @@ const PokemonList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [pokemonDetails, setPokemonDetails] = useState<Map<string, string>>(new Map()); // To store type colors
 
-  const rowsPerPage = 16; // Number of rows per page
-  
+  const rowsPerPage = 16;
+
   const fetchData = (page: number) => {
     setLoading(true);
     axios.get<ApiResponse>(`https://pokeapi.co/api/v2/pokemon?offset=${(page - 1) * rowsPerPage}&limit=${rowsPerPage}`)
-      .then(response => {
-        setData(response.data.results);
-        setFilteredData(response.data.results);
+      .then(async (response) => {
+        const results = response.data.results;
+        setData(results);
+        setFilteredData(results);
         setTotalPages(Math.ceil(response.data.count / rowsPerPage));
+
+        // Fetch additional details for each Pokémon to get type information
+        const detailsPromises = results.map(pokemon => 
+          axios.get<PokemonDetails>(pokemon.url).then(res => {
+            const types = res.data.types.map(t => t.type.name);
+            const colors = types.map(type => typeColors[type]).filter(color => color) as string[];
+            return { name: pokemon.name, color: colors[0] || '#fff' }; // Use first type color
+          })
+        );
+
+        const details = await Promise.all(detailsPromises);
+        const detailsMap = new Map(details.map(d => [d.name, d.color]));
+        setPokemonDetails(detailsMap);
         setLoading(false);
       })
       .catch(error => {
@@ -190,14 +244,18 @@ const PokemonList: React.FC = () => {
             filteredData.map((pokemon, index) => {
               const pokemonId = extractPokemonId(pokemon.url);
               const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
+              const bgColor = pokemonDetails.get(pokemon.name) || '#fff'; // Default color
+
               return (
                 <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
                   <PokemonCard>
                     <CardContentStyled>
-                      <PokemonId>#{pokemonId}</PokemonId> {/* Pokémon ID */}
-                      <img src={imageUrl} alt={pokemon.name} style={{ width: '120px', height: '120px', borderRadius: '50%' }} /> {/* Pokémon Image */}
+                      <PokemonId>#{pokemonId}</PokemonId>
+                      <ImageContainer bgColor={bgColor}>
+                        <img src={imageUrl} alt={pokemon.name} style={{ width: '100%', height: '100%' }} />
+                      </ImageContainer>
                       <Typography variant="h6" component="div" sx={{ marginTop: '8px' }}>
-                        {pokemon.name} {/* Pokémon Name */}
+                        {pokemon.name}
                       </Typography>
                     </CardContentStyled>
                     <CardActions>
@@ -208,7 +266,7 @@ const PokemonList: React.FC = () => {
                         variant="contained"
                         color="primary"
                       >
-                        More Details {/* Button */}
+                        More Details
                       </Button>
                     </CardActions>
                   </PokemonCard>
