@@ -1,8 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Card, CardContent, CardActions, Button, TextField, Typography, Box, Grid } from '@mui/material';
+import {
+  Card,
+  CardContent,
+  CardActions,
+  Button,
+  TextField,
+  Typography,
+  Box,
+  Grid,
+  IconButton,
+  styled,
+  ThemeProvider,
+  createTheme,
+} from '@mui/material';
 import { Link } from 'react-router-dom';
-import { styled, ThemeProvider, createTheme } from '@mui/material/styles';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import { useNavigate } from 'react-router-dom';
+import { SvgIcon } from '@mui/material';
 
 // Define the types for your data
 interface Pokemon {
@@ -130,8 +147,10 @@ const PokemonList: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [pokemonDetails, setPokemonDetails] = useState<Map<string, string>>(new Map()); // To store type colors
+  const [savedPokemons, setSavedPokemons] = useState<Set<string>>(new Set()); // To store saved Pokémon names
 
   const rowsPerPage = 16;
+  const navigate = useNavigate();
 
   const fetchData = (page: number) => {
     setLoading(true);
@@ -174,16 +193,25 @@ const PokemonList: React.FC = () => {
     setFilteredData(filtered);
   }, [searchTerm, data]);
 
-  if (error) {
-    return <div>{error}</div>;
-  }
-
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
   };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
+  };
+
+  // Toggle save state for Pokémon
+  const handleSaveToggle = (pokemonName: string) => {
+    setSavedPokemons(prevSaved => {
+      const updatedSaved = new Set(prevSaved);
+      if (updatedSaved.has(pokemonName)) {
+        updatedSaved.delete(pokemonName);
+      } else {
+        updatedSaved.add(pokemonName);
+      }
+      return updatedSaved;
+    });
   };
 
   // Extract the Pokémon ID from the URL
@@ -207,6 +235,10 @@ const PokemonList: React.FC = () => {
       </Button>
     );
   }
+
+  const handleRedirect = (pokemonName: string) => {
+    navigate(`/pokemon/${pokemonName}`);
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -245,6 +277,7 @@ const PokemonList: React.FC = () => {
               const pokemonId = extractPokemonId(pokemon.url);
               const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
               const bgColor = pokemonDetails.get(pokemon.name) || '#fff'; // Default color
+              const isSaved = savedPokemons.has(pokemon.name);
 
               return (
                 <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
@@ -258,16 +291,20 @@ const PokemonList: React.FC = () => {
                         {pokemon.name}
                       </Typography>
                     </CardContentStyled>
-                    <CardActions>
-                      <Button
-                        component={Link}
-                        to={`/pokemon/${pokemon.name}`}
-                        size="small"
-                        variant="contained"
-                        color="primary"
-                      >
-                        More Details
-                      </Button>
+                    <CardActions sx={{ backgroundColor: bgColor }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%'}}>
+                      
+                  <IconButton onClick={() => handleRedirect(pokemon.name)}>
+                    <MoreHorizIcon />
+                  </IconButton>
+                  <IconButton onClick={() => handleSaveToggle(pokemon.name)}>
+                    {(isSaved ? 
+                      <BookmarkIcon sx={{color:'green'}} />
+                      :
+                      <BookmarkBorderIcon />
+                    )}                    
+                  </IconButton>
+                </Box>
                     </CardActions>
                   </PokemonCard>
                 </Grid>
