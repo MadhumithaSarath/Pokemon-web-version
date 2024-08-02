@@ -41,6 +41,11 @@ const CardContentStyled = styled(CardContent)({
   textAlign: 'center',
 });
 
+const PokemonId = styled(Typography)({
+  fontWeight: 'bold',
+  marginBottom: '8px',
+});
+
 const PaginationContainer = styled(Box)({
   display: 'flex',
   justifyContent: 'center',
@@ -49,6 +54,33 @@ const PaginationContainer = styled(Box)({
   marginTop: '16px',
   padding: '16px',
 });
+
+const BackgroundContainer = styled(Box)({
+  position: 'relative',
+  padding: '26px',
+  background: `url('path/to/pokemon-logo-vector.svg') no-repeat center center`,
+  backgroundSize: 'cover',
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    background: 'rgba(255, 255, 255, 0.5)', // Adjust the opacity here
+    zIndex: -1,
+  },
+});
+
+const PaginationButton = styled(Button)(({ theme }) => ({
+  margin: '0 4px',
+  borderRadius: '20px',
+  boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
+  '&:hover': {
+    backgroundColor: theme.palette.primary.dark,
+    color: theme.palette.primary.contrastText,
+  },
+}));
 
 const PokemonList: React.FC = () => {
   const [data, setData] = useState<Pokemon[]>([]);
@@ -61,16 +93,6 @@ const PokemonList: React.FC = () => {
 
   const rowsPerPage = 16; // Number of rows per page
   
-  const PaginationButton = styled(Button)(({ theme }) => ({
-    margin: '0 4px',
-    borderRadius: '20px',
-    boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
-    '&:hover': {
-      backgroundColor: theme.palette.primary.dark,
-      color: theme.palette.primary.contrastText,
-    },
-  }));
-
   const fetchData = (page: number) => {
     setLoading(true);
     axios.get<ApiResponse>(`https://pokeapi.co/api/v2/pokemon?offset=${(page - 1) * rowsPerPage}&limit=${rowsPerPage}`)
@@ -134,67 +156,67 @@ const PokemonList: React.FC = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <div style={{ padding: '26px' }}>
+      <BackgroundContainer>
         <Typography variant="h4" gutterBottom>
           Pokémon List
         </Typography>
         <Box
-  sx={{
-    display: 'flex',
-    justifyContent: 'center',
-    marginBottom: '16px',
-    background: 'linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(240,240,240,1) 100%)',
-    padding: '10px',
-    borderRadius: '10px',
-  }}
->
-  <TextField
-    sx={{
-      width: '100%',
-      maxWidth: '600px',
-      borderRadius: '20px',
-      boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
-    }}
-    label="Search Pokémon"
-    variant="outlined"
-    value={searchTerm}
-    onChange={handleSearchChange}
-  />
-</Box>
-<Grid container spacing={3} sx={{marginLeft:'30px'}}>
-  {loading ? (
-    <Typography>Loading...</Typography>
-  ) : (
-    filteredData.map((pokemon, index) => {
-      const pokemonId = extractPokemonId(pokemon.url);
-      const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
-      return (
-        <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-          <PokemonCard>
-            <CardContentStyled>
-              <img src={imageUrl} alt={pokemon.name} style={{ width: '120px', height: '120px', borderRadius: '50%' }} />
-              <Typography variant="h6" component="div" sx={{ marginTop: '8px' }}>
-                {pokemon.name}
-              </Typography>
-            </CardContentStyled>
-            <CardActions>
-              <Button
-                component={Link}
-                to={`/pokemon/${pokemon.name}`}
-                size="small"
-                variant="contained"
-                color="primary"
-              >
-                More Details
-              </Button>
-            </CardActions>
-          </PokemonCard>
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            marginBottom: '16px',
+            background: 'linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(240,240,240,1) 100%)',
+            padding: '10px',
+            borderRadius: '10px',
+          }}
+        >
+          <TextField
+            sx={{
+              width: '100%',
+              maxWidth: '600px',
+              borderRadius: '20px',
+              boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
+            }}
+            label="Search Pokémon"
+            variant="outlined"
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
+        </Box>
+        <Grid container spacing={3} sx={{ marginLeft: '30px' }}>
+          {loading ? (
+            <Typography>Loading...</Typography>
+          ) : (
+            filteredData.map((pokemon, index) => {
+              const pokemonId = extractPokemonId(pokemon.url);
+              const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
+              return (
+                <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                  <PokemonCard>
+                    <CardContentStyled>
+                      <PokemonId>#{pokemonId}</PokemonId> {/* Pokémon ID */}
+                      <img src={imageUrl} alt={pokemon.name} style={{ width: '120px', height: '120px', borderRadius: '50%' }} /> {/* Pokémon Image */}
+                      <Typography variant="h6" component="div" sx={{ marginTop: '8px' }}>
+                        {pokemon.name} {/* Pokémon Name */}
+                      </Typography>
+                    </CardContentStyled>
+                    <CardActions>
+                      <Button
+                        component={Link}
+                        to={`/pokemon/${pokemon.name}`}
+                        size="small"
+                        variant="contained"
+                        color="primary"
+                      >
+                        More Details {/* Button */}
+                      </Button>
+                    </CardActions>
+                  </PokemonCard>
+                </Grid>
+              );
+            })
+          )}
         </Grid>
-      );
-    })
-  )}
-</Grid>
-
         <PaginationContainer>
           <Button
             variant="contained"
@@ -214,7 +236,7 @@ const PokemonList: React.FC = () => {
             Next
           </Button>
         </PaginationContainer>
-      </div>
+      </BackgroundContainer>
     </ThemeProvider>
   );
 }
