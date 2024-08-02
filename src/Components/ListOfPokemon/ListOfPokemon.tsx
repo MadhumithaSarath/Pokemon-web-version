@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Typography, Box } from '@mui/material';
+import { Card, CardContent, CardActions, Button, TextField, Typography, Box, Grid } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { styled, ThemeProvider, createTheme } from '@mui/material/styles';
 
-import './ListPokemon.css'
 // Define the types for your data
 interface Pokemon {
   name: string;
@@ -17,38 +16,67 @@ interface ApiResponse {
 }
 
 // Custom styles
-const RainbowTableHead = styled(TableHead)({
-  background: 'linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet)',
-  '& th': {
-    color: 'white',
-  },
-});
+const theme = createTheme();
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: theme.palette.action.hover,
-  },
-  '&:nth-of-type(even)': {
-    backgroundColor: theme.palette.action.selected,
+const PokemonCard = styled(Card)(({ theme }) => ({
+  marginBottom: '16px',
+  border: '1px solid #ddd',
+  borderRadius: '8px',
+  width: '100%',
+  maxWidth: '250px',
+  boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
+  background: theme.palette.background.paper,
+  borderColor: '#c8c8c8',
+  transition: 'transform 0.3s, box-shadow 0.3s',
+  '&:hover': {
+    transform: 'scale(1.05)',
+    boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.3)',
   },
 }));
 
-const theme = createTheme();
+const CardContentStyled = styled(CardContent)({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  textAlign: 'center',
+});
+
+const PaginationContainer = styled(Box)({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  gap: '8px',
+  marginTop: '16px',
+  padding: '16px',
+});
 
 const PokemonList: React.FC = () => {
   const [data, setData] = useState<Pokemon[]>([]);
+  const [filteredData, setFilteredData] = useState<Pokemon[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const rowsPerPage = 14; // Number of rows per page
+  const rowsPerPage = 16; // Number of rows per page
+  
+  const PaginationButton = styled(Button)(({ theme }) => ({
+    margin: '0 4px',
+    borderRadius: '20px',
+    boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
+    '&:hover': {
+      backgroundColor: theme.palette.primary.dark,
+      color: theme.palette.primary.contrastText,
+    },
+  }));
 
   const fetchData = (page: number) => {
     setLoading(true);
     axios.get<ApiResponse>(`https://pokeapi.co/api/v2/pokemon?offset=${(page - 1) * rowsPerPage}&limit=${rowsPerPage}`)
       .then(response => {
         setData(response.data.results);
+        setFilteredData(response.data.results);
         setTotalPages(Math.ceil(response.data.count / rowsPerPage));
         setLoading(false);
       })
@@ -63,6 +91,13 @@ const PokemonList: React.FC = () => {
     fetchData(currentPage); // Initial API call
   }, [currentPage]);
 
+  useEffect(() => {
+    const filtered = data.filter(pokemon =>
+      pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredData(filtered);
+  }, [searchTerm, data]);
+
   if (error) {
     return <div>{error}</div>;
   }
@@ -71,61 +106,106 @@ const PokemonList: React.FC = () => {
     setCurrentPage(newPage);
   };
 
-  // Calculate the pagination window
-  const paginationWindow = 5;
-  const startPage = Math.max(1, currentPage - Math.floor(paginationWindow / 2));
-  const endPage = Math.min(totalPages, startPage + paginationWindow - 1);
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+
+  // Extract the Pokémon ID from the URL
+  const extractPokemonId = (url: string) => {
+    const parts = url.split('/');
+    return parts[parts.length - 2];
+  };
+
+  // Calculate pagination buttons
+  const paginationButtons = [];
+  for (let i = 1; i <= Math.min(totalPages, 5); i++) {
+    paginationButtons.push(
+      <Button
+        key={i}
+        variant="contained"
+        onClick={() => handlePageChange(i)}
+        color={currentPage === i ? 'primary' : 'inherit'}
+        style={{ marginRight: '8px' }}
+      >
+        {i}
+      </Button>
+    );
+  }
 
   return (
     <ThemeProvider theme={theme}>
-      <div>
+      <div style={{ padding: '26px' }}>
         <Typography variant="h4" gutterBottom>
           Pokémon List
         </Typography>
-        <TableContainer component={Paper}>
-          <Table>
-            {/* <RainbowTableHead> */}
-              <TableRow>
-                <TableCell>Name</TableCell>
-              </TableRow>
-            {/* </RainbowTableHead> */}
-            <TableBody>
-              {loading ? (
-                <TableRow>
-                  <TableCell>Loading...</TableCell>
-                </TableRow>
-              ) : (
-                data.map((pokemon, index) => (
-                  <StyledTableRow key={index}>
-                    <TableCell>
-                      <Link to={`/pokemon/${pokemon.name}`} className='text-link'>{pokemon.name}</Link>
-                    </TableCell>
-                  </StyledTableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <Box display="flex" justifyContent="center" mt={2}>
+        <Box
+  sx={{
+    display: 'flex',
+    justifyContent: 'center',
+    marginBottom: '16px',
+    background: 'linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(240,240,240,1) 100%)',
+    padding: '10px',
+    borderRadius: '10px',
+  }}
+>
+  <TextField
+    sx={{
+      width: '100%',
+      maxWidth: '600px',
+      borderRadius: '20px',
+      boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
+    }}
+    label="Search Pokémon"
+    variant="outlined"
+    value={searchTerm}
+    onChange={handleSearchChange}
+  />
+</Box>
+<Grid container spacing={3} sx={{marginLeft:'30px'}}>
+  {loading ? (
+    <Typography>Loading...</Typography>
+  ) : (
+    filteredData.map((pokemon, index) => {
+      const pokemonId = extractPokemonId(pokemon.url);
+      const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
+      return (
+        <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+          <PokemonCard>
+            <CardContentStyled>
+              <img src={imageUrl} alt={pokemon.name} style={{ width: '120px', height: '120px', borderRadius: '50%' }} />
+              <Typography variant="h6" component="div" sx={{ marginTop: '8px' }}>
+                {pokemon.name}
+              </Typography>
+            </CardContentStyled>
+            <CardActions>
+              <Button
+                component={Link}
+                to={`/pokemon/${pokemon.name}`}
+                size="small"
+                variant="contained"
+                color="primary"
+              >
+                More Details
+              </Button>
+            </CardActions>
+          </PokemonCard>
+        </Grid>
+      );
+    })
+  )}
+</Grid>
+
+        <PaginationContainer>
           <Button
             variant="contained"
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            style={{ marginRight: '8px' }}
           >
             Previous
           </Button>
-          {Array.from({ length: endPage - startPage + 1 }, (_, index) => startPage + index).map(page => (
-            <Button
-              key={page}
-              variant="contained"
-              onClick={() => handlePageChange(page)}
-              color={currentPage === page ? 'primary' : 'inherit'}
-              style={{ marginRight: '8px' }}
-            >
-              {page}
-            </Button>
-          ))}
+          <Box display="flex" alignItems="center" gap="8px">
+            {paginationButtons}
+          </Box>
           <Button
             variant="contained"
             onClick={() => handlePageChange(currentPage + 1)}
@@ -133,7 +213,7 @@ const PokemonList: React.FC = () => {
           >
             Next
           </Button>
-        </Box>
+        </PaginationContainer>
       </div>
     </ThemeProvider>
   );
