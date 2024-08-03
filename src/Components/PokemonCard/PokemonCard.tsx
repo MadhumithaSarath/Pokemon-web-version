@@ -44,7 +44,7 @@ const PokemonCardStyle = styled(Card)(({ color }: { color: string }) => ({
 const PokemonCard: React.FC<{ pokemon: Pokemon }> = ({ pokemon }) => {
   const pokemonColor = getPokemonCardColor(pokemon.name);
   const pokemonId = extractPokemonId(pokemon.url);
-  const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
+  const imageUrl = `https://github.com/PokeAPI/sprites/tree/master/sprites/pokemon/${pokemonId}.png`;
 
   return (
     <PokemonCardStyle color={pokemonColor}>

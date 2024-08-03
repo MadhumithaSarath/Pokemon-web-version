@@ -69,11 +69,6 @@ const CardContentStyled = styled(CardContent)({
   textAlign: 'center',
 });
 
-const PokemonId = styled(Typography)({
-  fontWeight: 'bold',
-  marginBottom: '8px',
-});
-
 // New style for the image container with dynamic color
 const ImageContainer = styled(Box)<{ bgColor: string }>(({ bgColor }) => ({
   width: '120px',
