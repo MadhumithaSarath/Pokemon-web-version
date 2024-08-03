@@ -205,6 +205,10 @@ const PokemonList: React.FC = () => {
     navigate(`/pokemon/${pokemonName}`);
   };
 
+  const convertToRawUrl = (githubBlobUrl: string): string => {
+    return githubBlobUrl.replace('/blob/', '/raw/');
+  };  
+
   const imageStyle: React.CSSProperties = {
     display: 'block',
     margin: '0 auto',
@@ -240,7 +244,8 @@ const PokemonList: React.FC = () => {
           ) : (
             filteredData.map((pokemon, index) => {
               const pokemonId = extractPokemonId(pokemon.url);
-              const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
+              const githubBlobUrl = `https://github.com/PokeAPI/sprites/blob/master/sprites/pokemon/${pokemonId}.png`;
+              const imageUrl = convertToRawUrl(githubBlobUrl);
               const bgColor = pokemonDetails.get(pokemon.name) || '#fff';
 
               return (
