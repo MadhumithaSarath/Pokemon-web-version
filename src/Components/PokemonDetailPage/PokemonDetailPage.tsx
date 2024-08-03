@@ -57,7 +57,7 @@ const PokemonDetail: React.FC = () => {
   const [data, setData] = useState<PokemonDetail | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   useEffect(() => {
     setLoading(true);
@@ -73,8 +73,9 @@ const PokemonDetail: React.FC = () => {
       });
   }, [name]);
 
+  //Back Button
   const handleBackClick = () => {
-    navigate('/'); 
+    navigate('/');
   };
 
   if (error) {
@@ -129,91 +130,67 @@ const PokemonDetail: React.FC = () => {
   const abilityColors = ['#e57373', '#81c784', '#64b5f6', '#ffb74d', '#ba68c8', '#4db6ac'];
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'center', 
-        alignItems: 'center',     
-        minHeight: '100vh',
-        padding: 2,
-        backgroundColor: '#f5f5f5', 
-      }}
-    >
-      <Card sx={{ maxWidth: 800 }}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={4}>
-            <IconButton 
-              sx={{ alignSelf: 'flex-start', mb: 2 }}
-              onClick={handleBackClick}
-            >
-              <ArrowBackIcon />
-            </IconButton>
-            <Box sx={{ textAlign: 'left', mt: 2, marginLeft:'20px' }}>
-              <Typography variant="h6">ID: {data.id}</Typography>
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh', padding: 3, backgroundColor: '#f5f5f5'}}>
+      <Box sx={{ width: '100%', maxWidth: '1200px', mb: 4, justifyContent: 'center', position: 'relative'}}>
+        <Typography variant="h3" gutterBottom sx={{ flexGrow: 1, textAlign: 'center'}}>
+          {data.name.toUpperCase()}
+        </Typography>
+      </Box>
+      <Grid container spacing={3} justifyContent="center">
+        <Grid item xs={12} md={4}>
+          <Card sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 2, backgroundColor: backgroundColor, boxShadow: 3}}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+              <IconButton sx={{ marginLeft: 2}} onClick={handleBackClick}>
+                <ArrowBackIcon />
+              </IconButton>
+              <Typography variant="h5" gutterBottom sx={{ flexGrow: 1, textAlign: 'right' }}>
+                ID: #0{data.id}
+              </Typography>
             </Box>
             <Box
-              sx={{
-                width: '200px', 
-                height: '200px',
-                borderRadius: '50%', 
-                backgroundColor, 
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                overflow: 'hidden', 
-                marginLeft: '15px',
-              }}
-            >
-              <CardMedia
-                component="img"
-                alt={data.name}
-                height="200"
-                width="200"
-                image={data.sprites.front_default}
-                sx={{
-                  objectFit: 'cover',
-                }}
-              />
+              sx={{ width: '100%', height: 300, display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden', borderRadius: '50%', border: '5px solid white', 
+                marginBottom: 2,}}>
+              <CardMedia component="img" alt={data.name} image={data.sprites.front_default} sx={{ width: 'auto', height: '100%', maxWidth: '100%', objectFit: 'contain'}}/>
             </Box>
-            <Box sx={{ textAlign: 'left', mt: 2, marginLeft:'20px' }}>
-              <Typography variant="body1" gutterBottom>
-                <strong>Height:</strong> {data.height} decimetres
+            <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}>
+              <Typography variant="h6" gutterBottom sx={{ marginRight: 2 }}>
+                <strong>Abilities</strong>
               </Typography>
-              <Typography variant="body1" gutterBottom>
-                <strong>Weight:</strong> {data.weight} hectograms
-              </Typography>
-            </Box>
-          </Grid>
-          <Grid item xs={12} md={8}>
-            <CardContent>
-              <Typography variant="body1" gutterBottom>
-                <strong>Types:</strong> {data.types.map(type => type.type.name).join(', ')}
-              </Typography>
-              <Typography variant="body1" gutterBottom> <strong>Abilities</strong> </Typography>
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                 {data.abilities.map((ability, index) => (
                   <Box
                     key={index}
-                    sx={{
-                      backgroundColor: abilityColors[index % abilityColors.length],
-                      color: 'white',
-                      borderRadius: 4,
-                      padding: '5px 8px',
-                      margin: '4px 0',
-                    }}
-                  >
-                    {ability.ability.name}
+                    sx={{ display: 'flex', alignItems: 'center', backgroundColor: abilityColors[index % abilityColors.length], color: 'white', borderRadius: 4, padding: '5px 8px', 
+                      margin: '4px 0' }}>
+                    <Typography variant="body2">{ability.ability.name}</Typography>
                   </Box>
                 ))}
               </Box>
-              <Typography variant="body1" gutterBottom sx={{ textAlign:'center'}}><strong>Base Stats</strong></Typography>
+            </Box>
+          </Card>
+        </Grid>
+        <Grid item xs={12} md={8}>
+          <Card sx={{ padding: 2, boxShadow: 3 }}>
+            <CardContent>
+              <Typography variant="h6" gutterBottom>
+                <strong>Types:</strong> {data.types.map(type => type.type.name).join(', ')}
+              </Typography>
+              <Typography variant="h6" gutterBottom>
+                <strong>Height:</strong> {data.height} decimetres
+              </Typography>
+              <Typography variant="h6" gutterBottom>
+                <strong>Weight:</strong> {data.weight} hectograms
+              </Typography>
+              <Typography variant="h6" gutterBottom sx={{ textAlign: 'center' }}>
+                <strong>Base Stats</strong>
+              </Typography>
               <Box sx={{ height: 200, marginTop: 2 }}>
                 <Bar data={chartData} options={{ responsive: true, maintainAspectRatio: false, indexAxis: 'y' }} />
               </Box>
             </CardContent>
-          </Grid>
+          </Card>
         </Grid>
-      </Card>
+      </Grid>
     </Box>
   );
 }
