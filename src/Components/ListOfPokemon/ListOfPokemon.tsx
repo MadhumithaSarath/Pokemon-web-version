@@ -243,52 +243,35 @@ const PokemonList: React.FC = () => {
     height: '50px', // Adjust as needed
     width: 'auto'  // Adjust as needed
   };
-
   return (
     <ThemeProvider theme={theme}>
       <BackgroundContainer>
-      <Box
-      sx={{
-        display: 'flex',
-        alignItems: 'center', 
-        justifyContent: 'space-between', 
-        marginBottom: '16px',
-        background: 'linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(240,240,240,1) 100%)',
-        padding: '10px',
-        borderRadius: '10px',
-      }}
-    >
-      <img
-        src={HeaderLogo}
-        alt="Pokemon Explorer App"
-        style={{
-          height: '50px',
-          width: 'auto',
-          marginRight: '16px',
-        }}
-      />
-      
-      <Box
-        sx={{
-          flexGrow: 1, 
-          display: 'flex',
-          justifyContent: 'center',
-        }}
-      >
-        <TextField
+      <div>
+      <img src={HeaderLogo} alt="Pokemon Explorer App" style={imageStyle} />
+    </div>
+        <Box
           sx={{
-            width: '100%',
-            maxWidth: '600px',
-            borderRadius: '20px',
-            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
+            display: 'flex',
+            justifyContent: 'center',
+            marginBottom: '16px',
+            background: 'linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(240,240,240,1) 100%)',
+            padding: '10px',
+            borderRadius: '10px',
           }}
-          label="Search Pokémon"
-          variant="outlined"
-          value={searchTerm}
-          onChange={handleSearchChange}
-        />
-      </Box>
-    </Box>
+        >
+          <TextField
+            sx={{
+              width: '100%',
+              maxWidth: '600px',
+              borderRadius: '20px',
+              boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
+            }}
+            label="Search Pokémon"
+            variant="outlined"
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
+        </Box>
         <Grid container spacing={3} sx={{ marginLeft: '30px' }}>
           {loading ? (
             <Typography>Loading...</Typography>
