@@ -12,11 +12,11 @@ interface Pokemon {
 // Define the function to get Pokémon card color
 const getPokemonCardColor = (pokemonName: string) => {
   const colorMap: { [key: string]: string } = {
-    pikachu: '#F2C500', // yellow
+    pikachu: '#F2C500', 
     charizard: '#F08030', 
     bulbasaur: '#9BCC50', 
   };
-  return colorMap[pokemonName.toLowerCase()] || '#ffffff'; // default white
+  return colorMap[pokemonName.toLowerCase()] || '#ffffff'; 
 };
 
 

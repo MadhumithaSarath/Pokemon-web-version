@@ -108,16 +108,6 @@ const BackgroundContainer = styled(Box)({
   },
 });
 
-const PaginationButton = styled(Button)(({ theme }) => ({
-  margin: '0 4px',
-  borderRadius: '20px',
-  boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
-  '&:hover': {
-    backgroundColor: theme.palette.primary.dark,
-    color: theme.palette.primary.contrastText,
-  },
-}));
-
 // Define a mapping of Pokémon types to colors
 const typeColors: Record<string, string> = {
   fire: '#f5a367',
@@ -203,19 +193,6 @@ const PokemonList: React.FC = () => {
     setSearchTerm(event.target.value);
   };
 
-  // Toggle save state for Pokémon
-  const handleSaveToggle = (pokemonName: string) => {
-    setSavedPokemons(prevSaved => {
-      const updatedSaved = new Set(prevSaved);
-      if (updatedSaved.has(pokemonName)) {
-        updatedSaved.delete(pokemonName);
-      } else {
-        updatedSaved.add(pokemonName);
-      }
-      return updatedSaved;
-    });
-  };
-
   // Extract the Pokémon ID from the URL
   const extractPokemonId = (url: string) => {
     const parts = url.split('/');
@@ -245,8 +222,8 @@ const PokemonList: React.FC = () => {
   const imageStyle: React.CSSProperties = {
     display: 'block',
     margin: '0 auto',
-    height: '50px', // Adjust as needed
-    width: 'auto'  // Adjust as needed
+    height: '50px',
+    width: 'auto'
   };
   return (
     <ThemeProvider theme={theme}>
@@ -279,7 +256,7 @@ const PokemonList: React.FC = () => {
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
-              <img src={SearchGif} alt="Search" style={{ width: '30px', height: '30px' }} /> {/* Adjust size as needed */}
+              <img src={SearchGif} alt="Search" style={{ width: '30px', height: '30px' }} />
             </InputAdornment>
           ),
         }}
@@ -293,8 +270,8 @@ const PokemonList: React.FC = () => {
     display: 'flex', 
     justifyContent: 'center', 
     alignItems: 'center', 
-    minHeight: '100vh', // Full viewport height
-    textAlign: 'center' // Center text inside the container
+    minHeight: '100vh',
+    textAlign: 'center'
   }}
 >
   {loading ? (

@@ -8,13 +8,12 @@
     background-color: rgb(77 101 62 / 50%) !important
   }
 
-  /* Assuming this CSS is in your stylesheet or CSS module */
 .container {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; /* Full viewport height */
-  text-align: center; /* Optional: Center text */
+  min-height: 100vh; 
+  text-align: center; 
 }
 
 .loading-wrapper {
@@ -24,6 +23,6 @@
 }
 
 .loading-gif {
-  width: 100px; /* Adjust size as needed */
-  height: auto; /* Maintain aspect ratio */
+  width: 100px; 
+  height: auto; 
 }
