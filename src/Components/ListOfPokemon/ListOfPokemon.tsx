@@ -13,10 +13,15 @@ import {
   styled,
   ThemeProvider,
   createTheme,
+  InputAdornment ,
 } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { useNavigate } from 'react-router-dom';
-import HeaderLogo from '../../assets/images/HeaderLogo.jpg';
+import Pokemon_logo from '../../assets/images/Pokemon_logo.png';
+import giphy from '../../assets/images/giphy.gif';
+import SearchGif from '../../assets/images/searchGif.gif';
+
+import './ListPokemon.css'
 
 // Define the types for your data
 interface Pokemon {
@@ -245,68 +250,88 @@ const PokemonList: React.FC = () => {
   };
   return (
     <ThemeProvider theme={theme}>
-      <BackgroundContainer>
-      <div>
-      <img src={HeaderLogo} alt="Pokemon Explorer App" style={imageStyle} />
+      <BackgroundContainer className='bgColor'>
+      <div style={{marginBottom: '5px'}}>
+      <img src={Pokemon_logo} alt="Pokemon Explorer App" style={imageStyle} />
     </div>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            marginBottom: '16px',
-            background: 'linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(240,240,240,1) 100%)',
-            padding: '10px',
-            borderRadius: '10px',
-          }}
-        >
-          <TextField
-            sx={{
-              width: '100%',
-              maxWidth: '600px',
-              borderRadius: '20px',
-              boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
-            }}
-            label="Search Pokémon"
-            variant="outlined"
-            value={searchTerm}
-            onChange={handleSearchChange}
-          />
-        </Box>
-        <Grid container spacing={3} sx={{ marginLeft: '30px' }}>
-          {loading ? (
-            <Typography>Loading...</Typography>
-          ) : (
-            filteredData.map((pokemon, index) => {
-              const pokemonId = extractPokemonId(pokemon.url);
-              const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
-              const bgColor = pokemonDetails.get(pokemon.name) || '#fff'; // Default color
-              const isSaved = savedPokemons.has(pokemon.name);
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: '16px',
+        background: 'linear-gradient(90deg, rgba(255, 255, 255, 1) 0%, #fff 100%)',
+        padding: '10px',
+        borderRadius: '10px',
+      }}
+    >
+      <TextField
+        sx={{
+          width: '100%',
+          maxWidth: '600px',
+          borderRadius: '20px',
+          boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
+        }}
+        label="Search Pokémon"
+        variant="outlined"
+        value={searchTerm}
+        onChange={handleSearchChange}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <img src={SearchGif} alt="Search" style={{ width: '30px', height: '30px' }} /> {/* Adjust size as needed */}
+            </InputAdornment>
+          ),
+        }}
+      />
+    </Box>
+        <Grid 
+  container 
+  spacing={3} 
+  sx={{ 
+    marginLeft: '30px', 
+    display: 'flex', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    minHeight: '100vh', // Full viewport height
+    textAlign: 'center' // Center text inside the container
+  }}
+>
+  {loading ? (
+    <Grid item>
+      <img src={giphy} alt="Loading..." style={{ maxWidth: '100%', height: 'auto' }} />
+    </Grid>
+  ) : (
+    filteredData.map((pokemon, index) => {
+      const pokemonId = extractPokemonId(pokemon.url);
+      const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
+      const bgColor = pokemonDetails.get(pokemon.name) || '#fff';
 
-              return (
-                <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                  <PokemonCard>
-                    <CardContentStyled>
-                      <ImageContainer bgColor={bgColor}>
-                        <img src={imageUrl} alt={pokemon.name} style={{ width: '100%', height: '100%' }} />
-                      </ImageContainer>
-                      <Typography variant="h6" component="div" sx={{ marginTop: '8px' }}>
-                        {pokemon.name}
-                      </Typography>
-                    </CardContentStyled>
-                    <CardActions sx={{ backgroundColor: bgColor }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%'}}>
-                    <PokemonId sx={{marginTop: '10px'}}>#0{pokemonId}</PokemonId>
-                  <IconButton onClick={() => handleRedirect(pokemon.name)}>
-                    <MoreHorizIcon />
-                  </IconButton>
-                </Box>
-                    </CardActions>
-                  </PokemonCard>
-                </Grid>
-              );
-            })
-          )}
+      return (
+        <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+          <PokemonCard>
+            <CardContentStyled>
+              <ImageContainer bgColor={bgColor}>
+                <img src={imageUrl} alt={pokemon.name} style={{ width: '100%', height: '100%' }} />
+              </ImageContainer>
+              <Typography variant="h6" component="div" sx={{ marginTop: '8px' }}>
+                {pokemon.name}
+              </Typography>
+            </CardContentStyled>
+            <CardActions sx={{ backgroundColor: bgColor }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                <PokemonId sx={{ marginTop: '10px' }}>#0{pokemonId}</PokemonId>
+                <IconButton onClick={() => handleRedirect(pokemon.name)}>
+                  <MoreHorizIcon />
+                </IconButton>
+              </Box>
+            </CardActions>
+          </PokemonCard>
         </Grid>
+      );
+    })
+  )}
+</Grid>
         <PaginationContainer>
           <Button
             variant="contained"
