@@ -20,6 +20,7 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { useNavigate } from 'react-router-dom';
 import { SvgIcon } from '@mui/material';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 // Define the types for your data
 interface Pokemon {
@@ -283,7 +284,6 @@ const PokemonList: React.FC = () => {
                 <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
                   <PokemonCard>
                     <CardContentStyled>
-                      <PokemonId>#{pokemonId}</PokemonId>
                       <ImageContainer bgColor={bgColor}>
                         <img src={imageUrl} alt={pokemon.name} style={{ width: '100%', height: '100%' }} />
                       </ImageContainer>
@@ -293,16 +293,9 @@ const PokemonList: React.FC = () => {
                     </CardContentStyled>
                     <CardActions sx={{ backgroundColor: bgColor }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%'}}>
-                      
+                    <PokemonId sx={{marginTop: '10px'}}>#0{pokemonId}</PokemonId>
                   <IconButton onClick={() => handleRedirect(pokemon.name)}>
                     <MoreHorizIcon />
-                  </IconButton>
-                  <IconButton onClick={() => handleSaveToggle(pokemon.name)}>
-                    {(isSaved ? 
-                      <BookmarkIcon sx={{color:'green'}} />
-                      :
-                      <BookmarkBorderIcon />
-                    )}                    
                   </IconButton>
                 </Box>
                     </CardActions>
