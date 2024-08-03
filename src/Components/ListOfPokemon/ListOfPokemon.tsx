@@ -17,6 +17,7 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import Tooltip from '@mui/material/Tooltip';
 
 //import image
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
@@ -230,14 +231,12 @@ const PokemonList: React.FC = () => {
   };
   return (
     <ThemeProvider theme={theme}>
-      <BackgroundContainer className='bgColor'>
+      <BackgroundContainer className='backgroundColor'>
         <div style={{ marginBottom: '5px' }}>
           <img src={Pokemon_logo} alt="Pokemon Explorer App" style={imageStyle} />
         </div>
-        <Box
-          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '16px', background: 'linear-gradient(90deg, rgb(223 219 103) 0%, #1976d2 100%)', 
-            padding: '10px', borderRadius: '10px' }}>
-          <TextField sx={{ width: '100%', maxWidth: '600px', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)', backgroundColor:'white'}}
+        <Box className='searchBarBox' sx={{ background: 'linear-gradient(90deg, rgb(223 219 103) 0%, #1976d2 100%)'}}>
+          <TextField className='searchBarTextField'
             label="Search Pokémon"
             variant="outlined"
             value={searchTerm}
@@ -251,7 +250,7 @@ const PokemonList: React.FC = () => {
             }}
           />
         </Box>
-        <Grid container spacing={3} sx={{ marginLeft: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', textAlign: 'center'}}>
+        <Grid container spacing={3} className='contentGrid'>
           {loading ? (
             <Grid item>
               <img src={giphy} alt="Loading..." style={{ maxWidth: '100%', height: 'auto' }} />
@@ -274,12 +273,16 @@ const PokemonList: React.FC = () => {
                           {pokemon.name}
                         </Typography>
                       </CardContentStyled>
+
+                      {/* making id and more Button in same line */}
                       <CardActions sx={{ backgroundColor: bgColor }}>
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                        <Box className='idButton'>
                           <Typography sx={{ marginTop: '10px' }}>#0{pokemonId}</Typography>
+                          <Tooltip title="More Details">
                           <IconButton onClick={() => handleRedirect(pokemon.name)}>
                             <MoreHorizIcon />
                           </IconButton>
+                          </Tooltip>
                         </Box>
                       </CardActions>
                     </PokemonCard>

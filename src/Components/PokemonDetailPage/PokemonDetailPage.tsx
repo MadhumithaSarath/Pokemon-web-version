@@ -7,10 +7,14 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Legend } from 'chart.js';
+import Tooltip from '@mui/material/Tooltip';
+
+//import css
+import './PokemonDetailPage.css'
 
 // Register the components for Chart.js
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Legend);
 
 // Define the types for your data
 interface Ability {
@@ -130,8 +134,8 @@ const PokemonDetail: React.FC = () => {
   const abilityColors = ['#e57373', '#81c784', '#64b5f6', '#ffb74d', '#ba68c8', '#4db6ac'];
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh', padding: 3, backgroundColor: '#f5f5f5'}}>
-      <Box sx={{ width: '100%', maxWidth: '1200px', mb: 4, justifyContent: 'center', position: 'relative'}}>
+    <Box className='detailPageBoxOne'>
+      <Box className='detailPageBoxTwo'>
         <Typography variant="h3" gutterBottom sx={{ flexGrow: 1, textAlign: 'center'}}>
           {data.name.toUpperCase()}
         </Typography>
@@ -139,28 +143,28 @@ const PokemonDetail: React.FC = () => {
       <Grid container spacing={3} justifyContent="center">
         <Grid item xs={12} md={4}>
           <Card sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 2, backgroundColor: backgroundColor, boxShadow: 3}}>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+            <Box className='detailPageBoxThree'>
+            <Tooltip title="Go Back">
               <IconButton sx={{ marginLeft: 2}} onClick={handleBackClick}>
                 <ArrowBackIcon />
               </IconButton>
+              </Tooltip>
               <Typography variant="h5" gutterBottom sx={{ flexGrow: 1, textAlign: 'right' }}>
                 ID: #0{data.id}
               </Typography>
             </Box>
-            <Box
-              sx={{ width: '100%', height: 300, display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden', borderRadius: '50%', border: '5px solid white', 
-                marginBottom: 2,}}>
-              <CardMedia component="img" alt={data.name} image={data.sprites.front_default} sx={{ width: 'auto', height: '100%', maxWidth: '100%', objectFit: 'contain'}}/>
+            <Box className='detailPageBoxFour'>
+              <CardMedia component="img" alt={data.name} image={data.sprites.front_default} className='CardMediaOne'/>
             </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}>
+            <Box className='detailPageBoxFive'>
               <Typography variant="h6" gutterBottom sx={{ marginRight: 2 }}>
                 <strong>Abilities</strong>
               </Typography>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+              <Box className='detailPageBoxSix'>
                 {data.abilities.map((ability, index) => (
-                  <Box
+                  <Box className = 'detailPageBoxSeven'
                     key={index}
-                    sx={{ display: 'flex', alignItems: 'center', backgroundColor: abilityColors[index % abilityColors.length], color: 'white', borderRadius: 4, padding: '5px 8px', 
+                    sx={{backgroundColor: abilityColors[index % abilityColors.length], color: 'white', borderRadius: 4, padding: '5px 8px', 
                       margin: '4px 0' }}>
                     <Typography variant="body2">{ability.ability.name}</Typography>
                   </Box>

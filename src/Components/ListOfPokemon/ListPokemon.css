@@ -4,25 +4,41 @@
     cursor: pointer !important;
   }
   
-  .bgColor {
+  .backgroundColor {
     background-color: rgb(77 101 62 / 50%) !important
   }
 
-.container {
+/* searchBar box */
+.searchBarBox {
+  margin-bottom: 16px;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.searchBarBox, .contentGrid {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; 
-  text-align: center; 
 }
 
-.loading-wrapper {
+/* searchBar textfield */
+.searchBarTextField {
+  width: 100%;
+  max-width: 600px;
+  background-color: white;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Grid to show content */
+.contentGrid {
+  margin-left: 30px;
+  min-height: 100vh;
+  text-align: center;
+}
+
+/* id Button in same line */
+.idButton {
   display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.loading-gif {
-  width: 100px; 
-  height: auto; 
+  justify-content: space-between;
+  width: 100%;
 }
