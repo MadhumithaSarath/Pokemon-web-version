@@ -1,5 +1,6 @@
 .backgroundColor {
-    background-color: rgb(77 101 62 / 50%) !important
+    background-color: rgb(77 101 62 / 50%) !important;
+    padding: 36px;
   }
 
 /* searchBar box */

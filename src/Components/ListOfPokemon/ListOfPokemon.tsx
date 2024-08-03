@@ -46,6 +46,7 @@ interface ApiResponse {
 // Custom styles
 const theme = createTheme();
 
+//Added Card for Pokemon name, id, and Icon
 const PokemonCard = styled(Card)(({ theme }) => ({
   marginBottom: '16px',
   border: '1px solid #ddd',
@@ -62,6 +63,7 @@ const PokemonCard = styled(Card)(({ theme }) => ({
   },
 }));
 
+// image inside the card to align center
 const CardContentStyled = styled(CardContent)({
   display: 'flex',
   flexDirection: 'column',
@@ -69,7 +71,7 @@ const CardContentStyled = styled(CardContent)({
   textAlign: 'center',
 });
 
-// New style for the image container with dynamic color
+// New style for the image container with dynamic color in round shape
 const ImageContainer = styled(Box)<{ bgColor: string }>(({ bgColor }) => ({
   width: '120px',
   height: '120px',
@@ -82,6 +84,7 @@ const ImageContainer = styled(Box)<{ bgColor: string }>(({ bgColor }) => ({
   overflow: 'hidden',
 }));
 
+//proper alignment to page number button
 const PaginationContainer = styled(Box)({
   display: 'flex',
   justifyContent: 'center',
@@ -91,22 +94,6 @@ const PaginationContainer = styled(Box)({
   padding: '16px',
 });
 
-const BackgroundContainer = styled(Box)({
-  position: 'relative',
-  padding: '26px',
-  background: `url('path/to/pokemon-logo-vector.svg') no-repeat center center`,
-  backgroundSize: 'cover',
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    background: 'rgba(255, 255, 255, 0.5)',
-    zIndex: -1,
-  },
-});
 
 // Define a mapping of Pokémon types to colors
 const typeColors: Record<string, string> = {
@@ -226,7 +213,7 @@ const PokemonList: React.FC = () => {
   };
   return (
     <ThemeProvider theme={theme}>
-      <BackgroundContainer className='backgroundColor'>
+      <div className='backgroundColor'>
         <div style={{ marginBottom: '5px' }}>
           <img src={Pokemon_logo} alt="Pokemon Explorer App" style={imageStyle} />
         </div>
@@ -298,7 +285,7 @@ const PokemonList: React.FC = () => {
             Next
           </Button>
         </PaginationContainer>
-      </BackgroundContainer>
+      </div>
     </ThemeProvider>
   );
 }
