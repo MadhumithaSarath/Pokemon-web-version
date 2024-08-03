@@ -102,25 +102,28 @@ const PokemonDetail: React.FC = () => {
     ],
   };
 
+  const abilityColors = ['#e57373', '#81c784', '#64b5f6', '#ffb74d', '#ba68c8', '#4db6ac'];
+
   return (
     <Box
       sx={{
         display: 'flex',
-        flexDirection: 'column',
+        justifyContent: 'center', // Center horizontally
+        alignItems: 'center',     // Center vertically
         minHeight: '100vh',
         padding: 2,
-        alignItems: 'center'
+        backgroundColor: '#f5f5f5', // Light background color for better contrast
       }}
     >
       <Card sx={{ maxWidth: 800 }}>
-      <IconButton 
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={4}>
+          <IconButton 
         sx={{ alignSelf: 'flex-start', mb: 2 }}
         onClick={handleBackClick}
       >
         <ArrowBackIcon />
       </IconButton>
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={4}>
             <Box sx={{ textAlign: 'center', mt: 2 }}>
               <Typography variant="h6">ID: {data.id}</Typography>
             </Box>
@@ -145,13 +148,24 @@ const PokemonDetail: React.FC = () => {
               <Typography variant="body1" gutterBottom>
                 <strong>Types:</strong> {data.types.map(type => type.type.name).join(', ')}
               </Typography>
-              <Typography variant="body1" gutterBottom>
-              <strong>Abilities:</strong>
-              {data.abilities.map(ability => ability.ability.name).join(', ')}
-              </Typography>
-              <Typography variant="body1" gutterBottom sx={{alignItems: 'center', textAlign:'center'}}>
-              <strong>Base Stats:</strong>
-              </Typography>
+              <Typography variant="body1" gutterBottom> <strong>Abilities</strong> </Typography>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                {data.abilities.map((ability, index) => (
+                  <Box
+                    key={index}
+                    sx={{
+                      backgroundColor: abilityColors[index % abilityColors.length],
+                      color: 'white',
+                      borderRadius: 4,
+                      padding: '5px 8px',
+                      margin: '4px 0',
+                    }}
+                  >
+                    {ability.ability.name}
+                  </Box>
+                ))}
+              </Box>
+              <Typography variant="body1" gutterBottom sx={{ textAlign:'center'}}><strong>Base Stats</strong></Typography>
               <Box sx={{ height: 200, marginTop: 2 }}>
                 <Bar data={chartData} options={{ responsive: true, maintainAspectRatio: false, indexAxis: 'y' }} />
               </Box>
