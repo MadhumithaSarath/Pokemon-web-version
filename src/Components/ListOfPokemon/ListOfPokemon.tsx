@@ -14,13 +14,9 @@ import {
   ThemeProvider,
   createTheme,
 } from '@mui/material';
-import { Link } from 'react-router-dom';
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
-import BookmarkIcon from '@mui/icons-material/Bookmark';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { useNavigate } from 'react-router-dom';
-import { SvgIcon } from '@mui/material';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import HeaderLogo from '../../assets/images/HeaderLogo.jpg';
 
 // Define the types for your data
 interface Pokemon {
@@ -241,35 +237,58 @@ const PokemonList: React.FC = () => {
     navigate(`/pokemon/${pokemonName}`);
   };
 
+  const imageStyle: React.CSSProperties = {
+    display: 'block',
+    margin: '0 auto',
+    height: '50px', // Adjust as needed
+    width: 'auto'  // Adjust as needed
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <BackgroundContainer>
-        <Typography variant="h4" gutterBottom>
-          Pokémon List
-        </Typography>
-        <Box
+      <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center', 
+        justifyContent: 'space-between', 
+        marginBottom: '16px',
+        background: 'linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(240,240,240,1) 100%)',
+        padding: '10px',
+        borderRadius: '10px',
+      }}
+    >
+      <img
+        src={HeaderLogo}
+        alt="Pokemon Explorer App"
+        style={{
+          height: '50px',
+          width: 'auto',
+          marginRight: '16px',
+        }}
+      />
+      
+      <Box
+        sx={{
+          flexGrow: 1, 
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <TextField
           sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            marginBottom: '16px',
-            background: 'linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(240,240,240,1) 100%)',
-            padding: '10px',
-            borderRadius: '10px',
+            width: '100%',
+            maxWidth: '600px',
+            borderRadius: '20px',
+            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
           }}
-        >
-          <TextField
-            sx={{
-              width: '100%',
-              maxWidth: '600px',
-              borderRadius: '20px',
-              boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
-            }}
-            label="Search Pokémon"
-            variant="outlined"
-            value={searchTerm}
-            onChange={handleSearchChange}
-          />
-        </Box>
+          label="Search Pokémon"
+          variant="outlined"
+          value={searchTerm}
+          onChange={handleSearchChange}
+        />
+      </Box>
+    </Box>
         <Grid container spacing={3} sx={{ marginLeft: '30px' }}>
           {loading ? (
             <Typography>Loading...</Typography>
