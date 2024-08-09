@@ -1,69 +1,46 @@
-Sure, here's a detailed and structured README file for your repository:
+# Getting Started with Create React App
 
----
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-# Project Title
+## Available Scripts
 
-Pokémon Explorer App
+In the project directory, you can run:
 
-## Setup Instructions
+### `npm start`
 
-Follow these steps to set up the project on your local machine:
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-1. **Download the Repository**
-   - Download the zip file from the repository.
-   - Extract the contents to a folder.
+The page will reload if you make edits.\
+You will also see any lint errors in the console.
 
-2. **Install Dependencies**
-   - Open your terminal and navigate to the project folder.
-   - Run the following command to install all the necessary dependencies:
-     npm install
+### `npm test`
 
-3. **Start the Project**
-   - After the installation is complete, start the project by running:
-     npm start
-   - This command will automatically open your default browser and load the application.
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-## Implementation Notes
+### `npm run build`
 
-### Project Setup
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-1. **Create Project Folder**
-   - Create a new folder and open it using Visual Studio Code (VSCode).
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-2. **Install React and TypeScript**
-   - Follow the instructions provided in the [Create React App documentation](https://create-react-app.dev/docs/adding-typescript/).
-   - Run the following command in the terminal:
-     npx create-react-app pokenmon-explorer-app --template typescript
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-3. **Made use Of pokemon API to fetch images and data**
-   - get data -> 'https://pokeapi.co/api/v2/pokemon'.
-   - get images -> https://github.com/PokeAPI/sprites.
+### `npm run eject`
 
-### Code Quality
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-- **Code Formatting**
-  - Used TypeScript formatter to format the code for consistency and readability.
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-- **Naming Conventions**
-  - Followed PascalCase naming convention for all component files.
-  - Example: `ReservationCard.tsx`
-  - For reference naming, used PascalCase for React components and camelCase for their instances.
-  - Example: 
-    import ReservationCard from './ReservationCard';
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-- **Component Breakdown**
-Small Components for Larger Functionality
-Broke down larger functionality into smaller, reusable components to improve code maintainability and readability.
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-- **CSS File Naming**
-  - Named CSS files the same as their corresponding components for clarity.
-  - Followed external CSS styling to keep the code clean and maintainable.
+## Learn More
 
-- **Assets**
-- Created Assets Folder to keep all images in one place.
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-### Comments
-
-- Added comments where necessary to explain the functionality and purpose of code segments.
-- Ensured that the comments are clear and helpful to anyone reading the code.
+To learn React, check out the [React documentation](https://reactjs.org/).
